@@ -13,14 +13,12 @@ const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Yazıları API'den çekme
     fetch(`${API_URL}/posts.php`)
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
           setPosts(data.data);
         } else {
-          // Yazı bulunamadı, hata mesajını gösterme
           console.error(data.message);
         }
       })
@@ -30,7 +28,6 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const handlePostPress = (postId) => {
-    // Post'a tıklandığında ilgili postun ekranına yönlendirme
     navigation.navigate("Post", { postId });
   };
 
@@ -42,6 +39,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <View>
           <Text style={styles.title}>{item.post_title}</Text>
+          <View style={styles.separator} />
           <Text style={styles.content}>
             {item.post_content.substring(0, 100)}...
           </Text>
@@ -53,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Yazılar:</Text>
+      <Text style={styles.heading}>Gönderiler:</Text>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.post_id.toString()}
@@ -82,6 +80,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 8,
+  },
+  separator: {
+    borderBottomWidth: 1,
+    borderBottomColor: "gray",
     marginBottom: 8,
   },
   content: {

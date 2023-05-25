@@ -20,10 +20,8 @@ const LoginScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          // Giriş başarılı, Ana Ekran'a yönlendirme
           navigation.replace("Home");
         } else {
-          // Giriş başarısız, hata mesajını gösterme
           Alert.alert("Hata", "Giriş başarısız");
         }
       })
@@ -37,12 +35,11 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLoginAsGuest = () => {
-    // Misafir girişi
     navigation.replace("Home");
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: "#DFEDEE" }]}>
       <Text style={styles.label}>Kullanıcı Adı:</Text>
       <TextInput
         style={styles.input}
@@ -58,9 +55,24 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
 
-      <Button title="Giriş Yap" onPress={handleLogin} />
-      <Button title="Kayıt Ol" onPress={handleRegister} />
-      <Button title="Misafir Girişi" onPress={handleLoginAsGuest} />
+      <Button
+        title="Giriş Yap"
+        onPress={handleLogin}
+        color="#a2a2a2"
+        style={styles.button}
+      />
+      <Button
+        title="Kayıt Ol"
+        onPress={handleRegister}
+        color="#a2a2a2"
+        style={styles.button}
+      />
+      <Button
+        title="Misafir Girişi"
+        onPress={handleLoginAsGuest}
+        color="#a2a2a2"
+        style={styles.button}
+      />
     </View>
   );
 };
@@ -77,10 +89,14 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 16,
+    borderColor: "purple",
+    borderWidth: 2,
+    marginBottom: 18,
     paddingHorizontal: 8,
+  },
+  button: {
+    marginBottom: 8,
+    borderRadius: 8,
   },
 });
 

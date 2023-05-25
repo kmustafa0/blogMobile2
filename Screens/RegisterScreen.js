@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 
 const API_URL = "https://blog.mustafakole.dev/api"; // API adresinizi buraya girin
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [phone, setPhone] = useState("");
@@ -12,13 +12,11 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
 
   const handleRegister = () => {
-    // Boş veri kontrolü
     if (!name || !lastname || !phone || !email || !username || !password) {
       Alert.alert("Hata", "Boş alan bırakılamaz");
       return;
     }
 
-    // Kullanıcı kaydetme isteğini API'ye gönderme
     fetch(`${API_URL}/register.php`, {
       method: "POST",
       headers: {
@@ -35,10 +33,9 @@ const RegisterScreen = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          // Kayıt başarılı, kullanıcıyı giriş sayfasına yönlendirme
           Alert.alert("Başarılı", "Kayıt başarılı");
+          navigation.navigate("Login");
         } else {
-          // Kayıt başarısız, hata mesajını gösterme
           Alert.alert("Hata", "Kayıt başarısız");
         }
       })
@@ -48,7 +45,7 @@ const RegisterScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: "#DFEDEE" }]}>
       <Text style={styles.label}>Ad:</Text>
       <TextInput style={styles.input} value={name} onChangeText={setName} />
 
@@ -80,7 +77,18 @@ const RegisterScreen = () => {
         secureTextEntry
       />
 
-      <Button title="Kayıt Ol" onPress={handleRegister} />
+      <Button
+        title="Kayıt Ol"
+        onPress={handleRegister}
+        color="#a2a2a2"
+        style={styles.button}
+      />
+      <Button
+        title="Giriş Yap"
+        onPress={() => navigation.navigate("Login")}
+        color="#a2a2a2"
+        style={styles.button}
+      />
     </View>
   );
 };
@@ -101,6 +109,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+  },
+  button: {
+    marginBottom: 8,
+    borderRadius: 8,
   },
 });
 

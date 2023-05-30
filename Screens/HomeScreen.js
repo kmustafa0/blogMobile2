@@ -9,9 +9,12 @@ import {
 
 const API_URL = "https://blog.mustafakole.dev/api"; // API adresinizi buraya girin
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
+  const { username, loggedIn } = route.params;
+  console.log(route.params);
 
+  const welcomeMessage = loggedIn ? `${username}` : "Misafir";
   useEffect(() => {
     fetch(`${API_URL}/posts.php`)
       .then((response) => response.json())
@@ -52,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Gönderiler:</Text>
+      <Text> {welcomeMessage} </Text>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.post_id.toString()}

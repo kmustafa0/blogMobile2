@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Button,
 } from "react-native";
 
 const API_URL = "https://blog.mustafakole.dev/api";
@@ -34,6 +35,9 @@ const HomeScreen = ({ navigation, route }) => {
     navigation.navigate("Post", { postId });
   };
 
+  const handleExit = () => {
+    navigation.navigate("Login");
+  };
   const renderPost = ({ item }) => {
     return (
       <TouchableOpacity
@@ -54,7 +58,15 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Gönderiler:</Text>
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonWrapper}>
+          <Button
+            title="Çıkış yap"
+            onPress={handleExit}
+            style={styles.button}
+          />
+        </View>
+      </View>
       <Text> {welcomeMessage} </Text>
       <FlatList
         data={posts}

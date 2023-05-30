@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 
-const API_URL = "https://blog.mustafakole.dev/api"; // API adresinizi buraya girin
+const API_URL = "https://blog.mustafakole.dev/api";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");

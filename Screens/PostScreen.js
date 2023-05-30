@@ -1,41 +1,103 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 
 const API_URL = "https://blog.mustafakole.dev/api"; // API adresinizi buraya girin
 
 const PostScreen = ({ route }) => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+  const [commentContent, setCommentContent] = useState("");
+  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const { postId } = route.params;
 
-    fetch(`${API_URL}/posts.php?postId=${postId}`)
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`${API_URL}/posts.php?postId=${postId}`);
+        const data = await response.json();
         if (data.status === "success") {
           setPost(data.data);
         } else {
           //console.error(data.message);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
 
-    fetch(`${API_URL}/comments.php?postId=${postId}`)
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/comments.php?postId=${postId}`
+        );
+        const data = await response.json();
         if (data.status === "success") {
           setComments(data.data);
         } else {
           //console.error(data.message);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/users.php`);
+        const data = await response.json();
+        if (data.status === "success") {
+          const user = data.data;
+          setUserId(user.userId);
+          setEmail(user.email);
+          setUsername(user.username);
+        } else {
+          //console.error(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPost();
+    fetchComments();
+    fetchUserData();
   }, []);
+
+  const handleCommentSubmit = async () => {
+    try {
+      const { postId } = route.params;
+
+      const response = await fetch(`${API_URL}/add_comments.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          userId,
+          email,
+          comment: commentContent,
+          username,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        // Yorum başarıyla eklendi, yorumları yeniden getir
+        fetchComments();
+        setCommentContent(""); // Yorum gönderildikten sonra input alanını temizle
+      } else {
+        // Yorum eklenirken bir hata oluştu
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (!post) {
     return (
@@ -66,6 +128,16 @@ const PostScreen = ({ route }) => {
           </View>
         ))
       )}
+
+      <Text style={styles.addCommentTitle}>Yorum Ekle:</Text>
+      <TextInput
+        style={styles.commentInput}
+        multiline
+        placeholder="Yorumunuzu buraya yazın"
+        value={commentContent}
+        onChangeText={setCommentContent}
+      />
+      <Button title="Yorum Gönder" onPress={handleCommentSubmit} />
     </View>
   );
 };
@@ -122,6 +194,19 @@ const styles = StyleSheet.create({
   },
   commentDate: {
     color: "gray",
+  },
+  addCommentTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 16,
+  },
+  commentInput: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 8,
+    minHeight: 100,
   },
 });
 
